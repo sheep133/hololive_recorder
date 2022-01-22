@@ -12,6 +12,7 @@ class Hololive:
     """
 
     hololive_url = 'https://schedule.hololive.tv/simple'
+    # TODO: Change scarping by api. https://github.com/krichbanana/ytc-autodownloader/issues/1
 
     def __init__(self):
         self.page_resources = None
