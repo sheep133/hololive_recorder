@@ -8,6 +8,16 @@ from .CONFIG import GOOGLE_APIKEY
 
 class Stream:
 
+    """
+    A class that contains information of one stream.
+    Any non-Youtube stream is not supported for recording.
+    The get_title() and is_live() method can be carried out
+    with or without Google API Key. In case of API quota limit
+    or any error, the two methods will resort to another way
+    with sightly longer response time.
+    Modify your Google API key in CONFIG.py.
+    """
+
     def __init__(self, start_time, streamer, url):
         self.start_time_str = start_time
         self.start_time_obj = self.start_time_str_to_obj()
@@ -17,6 +27,9 @@ class Stream:
         self.id = self.get_id()
 
     def __repr__(self):
+        """
+        :return: a json-formatted string listing all necessary attributes
+        """
         return json.dumps({'start_time': self.start_time_str,
                            'streamer': self.streamer,
                            'url': self.url,
@@ -26,6 +39,11 @@ class Stream:
                           ensure_ascii=False).encode('utf-8').decode()
 
     def get_title(self):
+        """
+        Get stream's title with or without Google API.
+        Only support YouTube.
+        :return: Stream's title. Else, empty string.
+        """
         if GOOGLE_APIKEY:
             if self.is_youtube():
                 parsed_url = urlparse(self.url)
@@ -44,6 +62,10 @@ class Stream:
         return ""
 
     def is_upcoming(self):
+        """
+        Determine if the stream is later than current time
+        :return: Boolean
+        """
         curr_time = datetime.now().replace(second=0, microsecond=0)
         stream_time = datetime.strptime(self.start_time_str, "%m/%d %H:%M").replace(year=curr_time.year)
         if stream_time >= curr_time:
@@ -51,6 +73,11 @@ class Stream:
         return False
 
     def is_live(self):
+        """
+        Check if the stream is live with or without Google API.
+        Only support YouTube.
+        :return: Boolean
+        """
         if GOOGLE_APIKEY:
             if self.is_youtube():
                 parsed_url = urlparse(self.url)
@@ -76,6 +103,10 @@ class Stream:
         return re.search(r'https://www.youtube.com/watch', self.url)
 
     def get_id(self):
+        """
+        Get stream's id on YouTube.
+        :return: Stream's id. Else, empty string.
+        """
         if self.is_youtube():
             parsed_url = urlparse(self.url)
             return parse_qs(parsed_url.query).get('v')[0]
@@ -85,6 +116,10 @@ class Stream:
         return datetime.strptime(self.start_time_str, "%m/%d %H:%M").replace(year=datetime.now().year)
 
     def is_member_only(self):
+        """
+        Check whether the stream is limited to member.
+        :return: Boolean
+        """
         headers = {"Accept-Language": "en-US"}
         r = requests.get(self.url, headers=headers)
         r = r.content.decode()

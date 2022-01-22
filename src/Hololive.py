@@ -5,6 +5,12 @@ from .Stream import Stream
 
 
 class Hololive:
+
+    """
+    A class responsible for web scrapping from HoloLive Schedule webpage.
+    Specified timezone can be modified in CONFIG.py.
+    """
+
     hololive_url = 'https://schedule.hololive.tv/simple'
 
     def __init__(self):
@@ -13,6 +19,10 @@ class Hololive:
         self.filtered_streams = []
 
     def scrape_raw(self):
+        """
+        Scrape the schedule webpage and trim a little bit first.
+        :return: None
+        """
         self.page_resources = requests.get(self.hololive_url, cookies=TIMEZONE)
         self.page_resources = self.page_resources.text.split('\n')
         self.page_resources = [i.replace(" ", "").replace("\r", "") for i in self.page_resources]
@@ -30,6 +40,13 @@ class Hololive:
         return f.read().splitlines()
 
     def filter(self):
+        """
+        Filter the streams' title or streamer using the keywords specified
+        in ./title_keywords.txt and ./name_keywords.txt.
+        Then, further filter the streams by checking whether they are upcoming or on live.
+        Member limited streams are not included.
+        :return: None. self.filtered_streams is modified.
+        """
         title_pattern = "|".join(self.get_title_keywords())
         streamer_pattern = "|".join(self.get_name_keywords())
 
@@ -43,6 +60,10 @@ class Hololive:
         self.filtered_streams = [stream for stream in self.filtered_streams if (stream.is_upcoming() or stream.is_live()) and not stream.is_member_only()]
 
     def update(self):
+        """
+        Get un-filtered list of streams on YouTube, Twitch, radio station, etc.
+        :return: None. self.streams is modified.
+        """
         self.scrape_raw()
         f = open('./hololive_name.txt', 'r', encoding='utf-8')
         name_list = f.read().splitlines()
@@ -56,6 +77,7 @@ class Hololive:
         url = None
         date_time = None
 
+        # Loop through the page resources to find our targeted information
         for s in self.page_resources:
 
             for k, v in regex_pair.items():
@@ -75,6 +97,8 @@ class Hololive:
 
             if s in name_list:
                 streamer = s
+                # Check whether there's a duplicate before creating a Stream object.
+                # This minimizes the number of requests call.
                 if not self.duplicate_stream(url):
                     stream = Stream(start_time=date_time,
                                     streamer=streamer,
@@ -83,6 +107,11 @@ class Hololive:
                     self.streams.append(stream)
 
     def duplicate_stream(self, new_url):
+        """
+        Check whether there's a duplicate by checking the url
+        :param new_url: url used for comparison
+        :return: Boolean
+        """
         for stream in self.streams:
             if stream.url == new_url:
                 return True
