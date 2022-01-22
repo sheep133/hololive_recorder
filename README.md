@@ -1,4 +1,4 @@
-# hololive_recorder
+# Hololive Recorder
 Sometimes there maybe unarchived streams that yoy want to watch. But due to timezone difference, you could not afford burning the midnight oil to watch it. 
 And thus, this program will help you record the stream and let you watch it later.
 
