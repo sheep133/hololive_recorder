@@ -1,9 +1,9 @@
 import re
 from urllib.parse import urlparse, parse_qs
 import requests
-from datetime import datetime
+import datetime
 import json
-from .CONFIG import GOOGLE_APIKEY
+from .CONFIG import GOOGLE_APIKEY, TIMEZONE
 
 
 class Stream:
@@ -18,12 +18,13 @@ class Stream:
     Modify your Google API key in CONFIG.py.
     """
 
-    def __init__(self, start_time, streamer, url):
+    def __init__(self, start_time, streamer, url, title):
         self.start_time_str = start_time
+        self.start_time_str_to_local_timezone()
         self.start_time_obj = self.start_time_str_to_obj()
         self.streamer = streamer
         self.url = url
-        self.title = self.get_title()
+        self.title = title
         self.id = self.get_id()
 
     def __repr__(self):
@@ -66,9 +67,8 @@ class Stream:
         Determine if the stream is later than current time
         :return: Boolean
         """
-        curr_time = datetime.now().replace(second=0, microsecond=0)
-        stream_time = datetime.strptime(self.start_time_str, "%m/%d %H:%M").replace(year=curr_time.year)
-        if stream_time >= curr_time:
+        curr_time = datetime.datetime.now().replace(second=0, microsecond=0)
+        if self.start_time_obj >= curr_time:
             return True
         return False
 
@@ -113,7 +113,11 @@ class Stream:
         return ""
 
     def start_time_str_to_obj(self):
-        return datetime.strptime(self.start_time_str, "%m/%d %H:%M").replace(year=datetime.now().year)
+        return datetime.datetime.strptime(self.start_time_str, '%Y/%m/%d %H:%M:%S') + datetime.timedelta(hours=TIMEZONE - 9)
+
+    def start_time_str_to_local_timezone(self):
+        dummy = datetime.datetime.strptime(self.start_time_str, '%Y/%m/%d %H:%M:%S') + datetime.timedelta(hours=TIMEZONE - 9)
+        self.start_time_str = datetime.datetime.strftime(dummy, '%Y/%m/%d %H:%M:%S')
 
     def is_member_only(self):
         """
