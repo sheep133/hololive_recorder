@@ -6,6 +6,11 @@ This program mainly uses the `yt-dlp` package on [GitHub](https://github.com/yt-
 
 Should this infringe any copyright, this responsitory will be immediately deleted.
 
+# Library Required
+1. `pip install yt-dlp`
+2. `pip install ffmpeg-python`
+3. `pip install requests`
+
 # Timezone
 Please specifiy your own timezone at `./src/CONFIG.py`. The timezone input is GMT+X, where X is your local timezone. For example, `TIMEZONE = 8` represents GMT+8.
 
