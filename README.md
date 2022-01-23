@@ -7,7 +7,7 @@ This program mainly uses the `yt-dlp` package on [GitHub](https://github.com/yt-
 Should this infringe any copyright, this responsitory will be immediately deleted.
 
 # Timezone
-Please specifiy your own timezone at `./src/CONFIG.py`. The timezone choices can be viewed on [Hololive schedule](https://schedule.hololive.tv/lives/all) (left-hand side bar).
+Please specifiy your own timezone at `./src/CONFIG.py`. The timezone input is GMT+X, where X is your local timezone. For example, `TIMEZONE = 8` represents GMT+8.
 
 # Filtering
 It supports two types of filtering, which are by streamer and by title. All keywords should be placed in `name_keywords.txt` and `title_keywords.txt`, one keyword per line. 
