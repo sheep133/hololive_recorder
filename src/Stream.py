@@ -89,12 +89,12 @@ class Stream:
             return parse_qs(parsed_url.query).get('v')[0]
         return ""
 
-    def start_time_str_to_obj(self):
-        return datetime.datetime.strptime(self.start_time_str, '%Y/%m/%d %H:%M:%S') + datetime.timedelta(hours=TIMEZONE - 9)
-
     def start_time_str_to_local_timezone(self):
         dummy = datetime.datetime.strptime(self.start_time_str, '%Y/%m/%d %H:%M:%S') + datetime.timedelta(hours=TIMEZONE - 9)
         self.start_time_str = datetime.datetime.strftime(dummy, '%Y/%m/%d %H:%M:%S')
+
+    def start_time_str_to_obj(self):
+        return datetime.datetime.strptime(self.start_time_str, '%Y/%m/%d %H:%M:%S')
 
     def is_member_only(self):
         """
