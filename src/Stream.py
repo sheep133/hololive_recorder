@@ -26,6 +26,7 @@ class Stream:
         self.url = url
         self.title = title
         self.id = self.get_id()
+        self.stop_count = 0  # A count to double-check whether the stream stops. Prevents accidentally stopping the recording.
 
     def __repr__(self):
         """

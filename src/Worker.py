@@ -13,7 +13,7 @@ class Record(Process):
     A class being responsible for recording the stream, inheriting multiprocess.Process.
     One record process is target at one stream only.
     Multiple processes have to be called in order to parallel-record multiple streams at a time.
-    The number of process that can be runned depends on the number of CPU.
+    The number of process that can be run depends on the number of CPU.
     """
 
     def __init__(self, url):
@@ -23,7 +23,7 @@ class Record(Process):
     def run(self):
         """
         ydl_opts lists the configuration for YoutubeDL object.
-        The download files will not be merged and it is a known issue for yt-dlp.
+        The downloaded files will not be merged, and it is a known issue for yt-dlp.
         The merging process will be done by the Background class instead.
         The terminal may get a little messy even though quiet is set to be True.
         This issue arises from the live_from_start option.
@@ -136,17 +136,19 @@ class Background:
             # Stop the recording process if the stream goes down
             for stream in self.recording[:]:
                 if not stream.is_live():
-                    print("\nStopping: ", stream.title, stream.url)
-                    # Find the corresponding process
-                    for process in self.process:
-                        if process.name == stream.id:
-                            process.kill()
-                            process.join()
-                            self.process.remove(process)
-                            time.sleep(5)
-                    print("\nMerging: ", stream.title, stream.url)
-                    self.merge(stream.id, stream.title)
-                    self.recording.remove(stream)
+                    stream.stop_count += 1
+                    if stream.stop_count == 2:
+                        print("\nStopping: ", stream.title, stream.url)
+                        # Find the corresponding process
+                        for process in self.process:
+                            if process.name == stream.id:
+                                process.kill()
+                                process.join()
+                                self.process.remove(process)
+                                time.sleep(5)
+                        print("\nMerging: ", stream.title, stream.url)
+                        self.merge(stream.id, stream.title)
+                        self.recording.remove(stream)
 
             if not self.waiting and not self.recording:
                 break
