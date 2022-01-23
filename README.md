@@ -4,7 +4,7 @@ And thus, this program will help you record the stream and let you watch it late
 
 This program mainly uses the `yt-dlp` package on [GitHub](https://github.com/yt-dlp/yt-dlp) and the multiprocess to allow multiple recordings at a time.
 
-Should this infringe any copyright, this responsitory will be immediately deleted.
+Should this infringe any copyright, this responsitory will be immediately deleted. All videos should be deleted after you have watched it as well.
 
 # Library Required
 1. `pip install yt-dlp`
