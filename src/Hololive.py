@@ -1,7 +1,5 @@
 import requests
 import re
-import datetime
-from .CONFIG import TIMEZONE
 from .Stream import Stream
 
 

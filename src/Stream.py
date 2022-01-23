@@ -39,29 +39,6 @@ class Stream:
                           indent=4,
                           ensure_ascii=False).encode('utf-8').decode()
 
-    def get_title(self):
-        """
-        Get stream's title with or without Google API.
-        Only support YouTube.
-        :return: Stream's title. Else, empty string.
-        """
-        if GOOGLE_APIKEY:
-            if self.is_youtube():
-                parsed_url = urlparse(self.url)
-                video_id = parse_qs(parsed_url.query).get('v')[0]
-                r = requests.get("https://www.googleapis.com/youtube/v3/videos",
-                                 params={
-                                     'part': 'snippet',
-                                     'id': video_id,
-                                     'key': GOOGLE_APIKEY
-                                 })
-                if r.status_code == 200:
-                    return r.json().get('items')[0].get('snippet').get('title')
-        if self.is_youtube():
-            r = requests.get('https://noembed.com/embed?url=%s' % self.url)
-            return r.json().get('title')
-        return ""
-
     def is_upcoming(self):
         """
         Determine if the stream is later than current time
