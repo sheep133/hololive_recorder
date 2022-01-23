@@ -19,6 +19,12 @@ It supports two types of filtering, which are by streamer and by title. All keyw
 The `hololive_name.txt` provides all the example for you to copy and pasted into 'name_keywords.txt'. 
 Unicode characters are supported, that means you can select English, Japanese, etc.
 
+# How to run
+1. Install all neccessary libraries.
+2. Configure your timezone and keywords.
+3. Open terminal and navigate to the folder containing the files.
+4. `python main.py `
+
 # GOOGLE API KEY
 If you prefer to get information using GOOGLE API for a sightly faster performance, 
 please go ahead and create one at `Google Cloud Platform` and paste the key at `./src/CONFIG.py`.
