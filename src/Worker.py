@@ -75,8 +75,10 @@ class Background:
         :param video_title: video title on YouTube and is used to rename to output
         :return:
         """
-
-        video = ffmpeg.input('./video/%s.f299.mp4.part' % video_id)
+        if os.path.isfile('./video/%s.f299.mp4.part' % video_id):
+            video = ffmpeg.input('./video/%s.f299.mp4.part' % video_id)
+        else:
+            video = ffmpeg.input('./video/%s.f137.mp4.part' % video_id)
 
         audio = ffmpeg.input('./video/%s.f140.mp4.part' % video_id)
 
