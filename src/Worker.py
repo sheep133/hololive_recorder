@@ -15,7 +15,7 @@ class Record(Process):
     Multiple processes have to be called in order to parallel-record multiple streams at a time.
     The number of process that can be run depends on the number of CPU.
     """
-
+    # TODO: Fix the messy terminal by introducing Lock(). https://docs.python.org/3.7/library/multiprocessing.html#synchronization-between-processes
     def __init__(self, url):
         super(Record, self).__init__()
         self.url = url
@@ -76,15 +76,9 @@ class Background:
         :return:
         """
 
-        # Search the video and audio .part files.
-        # They should be ending with .f299 or .f140.
-        for (_, _, files) in os.walk('./video'):
-            for file in files:
-                if video_id in file:
-                    if file.endswith('.f299.mp4.part'):
-                        video = ffmpeg.input('./video/' + file)
-                    elif file.endswith('.f140.mp4.part'):
-                        audio = ffmpeg.input('./video/' + file)
+        video = ffmpeg.input('./video/%s.f299.mp4.part' % video_id)
+
+        audio = ffmpeg.input('./video/%s.f140.mp4.part' % video_id)
 
         # Replace any illegal characters for file name.
         video_title = re.sub(r'[\\/*?:"<>|]', '_', video_title)
@@ -145,7 +139,7 @@ class Background:
                                 process.kill()
                                 process.join()
                                 self.process.remove(process)
-                                time.sleep(5)
+                                time.sleep(20)
                         print("\nMerging: ", stream.title, stream.url)
                         self.merge(stream.id, stream.title)
                         self.recording.remove(stream)

@@ -36,7 +36,9 @@ class Stream:
                            'streamer': self.streamer,
                            'url': self.url,
                            'title': self.title,
-                           'id': self.id},
+                           'id': self.id,
+                           'is_live': self.is_live(),
+                           'stop_count': self.stop_count},
                           indent=4,
                           ensure_ascii=False).encode('utf-8').decode()
 
